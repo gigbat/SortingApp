@@ -1,0 +1,2 @@
+serviceClass: com.fullstackjava.client.GreetingService
+path: 8AEF564C2758B9938381E8719C13B0F7.gwt.rpc

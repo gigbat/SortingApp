@@ -1,0 +1,13 @@
+binding: user.agent=safari
+Compiling module com.fullstackjava.Demo
+   Unification traversed 763 fields and methods and 383 types. 7 are considered part of the current module and 19 had all of their fields and methods traversed.
+   Compiling 1 permutation
+      Compiling permutation 0...
+      Linking per-type JS with 7 new/changed types.
+      Source Maps Enabled
+   Compile of permutations succeeded
+   Compilation succeeded -- 1,742s
+Linking into C:\Users\Admin\MyApp\target\gwt\devmode\work\com.fullstackjava.Demo\compile-2\war\demo; Writing extras to C:\Users\Admin\MyApp\target\gwt\devmode\work\com.fullstackjava.Demo\compile-2\extras\demo
+   Link succeeded
+   Linking succeeded -- 0,171s
+2,272s total -- Compile completed

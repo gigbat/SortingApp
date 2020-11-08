@@ -1,0 +1,3 @@
+# Module demo
+# RPC service class, partial path of RPC policy file
+com.fullstackjava.client.GreetingService, 8AEF564C2758B9938381E8719C13B0F7.gwt.rpc
