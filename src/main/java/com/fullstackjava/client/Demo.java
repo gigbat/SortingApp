@@ -72,9 +72,14 @@ public class Demo implements EntryPoint {
         int count = Integer.parseInt(numbers);
         int[] arrOfNumber = new int[count];
 
+        if (flexTableNew.isAttached()) {
+            flexTableNew.clear();
+        }
+
         for (int i = 0; i < arrOfNumber.length; i++) {
             arrOfNumber[i] = (int) (Math.random() * 1000);
         }
+
         boolean smallValue = false;
         for (int i = 0; i < arrOfNumber.length; i++) {
             if (arrOfNumber[i] <= 30) {
@@ -94,7 +99,7 @@ public class Demo implements EntryPoint {
     }
 
     private void generateTableOfNumbers() {
-        putValueIntoSortTable();
+        putValueIntoTable();
         sort();
         reset();
     }
@@ -106,25 +111,7 @@ public class Demo implements EntryPoint {
         horizontalPanelNew.add(verticalPanelOfSortNew);
     }
 
-    private void putValueIntoSortTable() {
-        int valueOfStrings = 10;
-        int row = 0;
-        int column = 0;
-
-        for (int i = 0; i < currentArrOfNumber.length; i++) {
-            if (row >= valueOfStrings) {
-                row = 0;
-                column++;
-                flexTableNew.setText(row, column, String.valueOf(currentArrOfNumber[i]));
-            }
-
-            flexTableNew.setText(row, column, String.valueOf(currentArrOfNumber[i]));
-            row++;
-        }
-    }
-
     public boolean check = false;
-    public int randomNumber = 0;
     public int cell = 0;
 
     public void sort() {
@@ -139,13 +126,12 @@ public class Demo implements EntryPoint {
 
                 int number = Integer.parseInt(flexTableNew.getCellFormatter().getElement(rowIndex, columnIndex).getInnerHTML());
                 if (number <= 30) {
-                    randomNumber = doChange(rowIndex, columnIndex);
-                    currentArrOfNumber[cell] = randomNumber;
-                    flexTableNew.setText(rowIndex, columnIndex, String.valueOf(currentArrOfNumber[cell]));
+                    reGenerate(number);
                 }
                 else Window.alert("Please select a value smaller or equal to 30.");
             }
         });
+
         SORT.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -153,13 +139,36 @@ public class Demo implements EntryPoint {
                     recursiveDecreasing(currentArrOfNumber, 0, currentArrOfNumber.length - 1);
                     check = true;
                 } else {
-
                     recursiveIncreasing(currentArrOfNumber, 0, currentArrOfNumber.length - 1);
                     check = false;
                 }
-                afterSorting();
+                putValueIntoTable();
             }
         });
+    }
+
+    private void reGenerate(int count) {
+        int[] reArrOfNumber = new int[count];
+        if (flexTableNew.isAttached()) {
+            flexTableNew.removeAllRows();
+        }
+
+        for (int i = 0; i < reArrOfNumber.length; i++) {
+            reArrOfNumber[i] = (int) (Math.random() * 1000);
+        }
+
+        boolean smallValue = false;
+        for (int i = 0; i < reArrOfNumber.length; i++) {
+            if (reArrOfNumber[i] <= 30) {
+                smallValue = true;
+                break;
+            }
+        }
+
+        if (!smallValue) reArrOfNumber[(int) (Math.random() * (reArrOfNumber.length - 1))] = (int) (Math.random() * 30);
+
+        currentArrOfNumber = Arrays.copyOf(reArrOfNumber, reArrOfNumber.length);
+        putValueIntoTable();
     }
 
     public int decreasingSort(int arr[], int left, int right) {
@@ -218,7 +227,7 @@ public class Demo implements EntryPoint {
         }
     }
 
-    private void afterSorting() {
+    private void putValueIntoTable() {
         int valueOfStrings = 10;
         int row = 0;
         int column = 0;
@@ -244,18 +253,10 @@ public class Demo implements EntryPoint {
         });
     }
 
-    private int doChange(int rowIndex, int columnIndex) {
-        int random = (int) (Math.random() * 1000);
-        flexTableNew.setText(rowIndex, columnIndex, String.valueOf(random));
-        return random;
-    }
-
     public void setStyles() {
-        VERTICAL_PANEL_OF.setStyleName("block__intro");
         TEXT_BOX.setStyleName("block__text-box");
         BUTTON.setStyleName("block__button");
 
-        horizontalPanelNew.setStyleName("block__sort-h");
         verticalPanelOfSortNew.setStyleName("block__sort-v");
         flexTableNew.setStyleName("block__sort_flex");
     }
