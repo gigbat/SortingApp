@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.Timer;
 
 import java.util.Arrays;
 
@@ -17,6 +18,7 @@ public class Demo implements EntryPoint {
     private HorizontalPanel horizontalPanelNew = new HorizontalPanel();
     private FlexTable flexTableNew = new FlexTable();
     private VerticalPanel verticalPanelOfSortNew = new VerticalPanel();
+    private Timer timer = null;
 
     final Button SORT = new Button("Sort");
     final Button RESET = new Button("Reset");
@@ -65,6 +67,7 @@ public class Demo implements EntryPoint {
         }
 
         randomNumbers(numbers);
+        generateTableOfNumbers();
         TEXT_BOX.setText("");
     }
 
@@ -91,15 +94,13 @@ public class Demo implements EntryPoint {
         if (!smallValue) arrOfNumber[(int) (Math.random() * (arrOfNumber.length - 1))] = (int) (Math.random() * 30);
 
         currentArrOfNumber = Arrays.copyOf(arrOfNumber, arrOfNumber.length);
-
-        generateTableOfNumbers();
-
-        RootPanel.get("block").clear();
-        RootPanel.get("block").add(horizontalPanelNew);
     }
 
     private void generateTableOfNumbers() {
-        putValueIntoTable();
+        RootPanel.get("block").clear();
+        RootPanel.get("block").add(horizontalPanelNew);
+
+        commonPutValueIntoTable();
         sort();
         reset();
     }
@@ -111,8 +112,9 @@ public class Demo implements EntryPoint {
         horizontalPanelNew.add(verticalPanelOfSortNew);
     }
 
-    public boolean check = false;
+    public boolean checkForSelectRecursive = false;
     public int cell = 0;
+    public boolean clickButtonSort = false;
 
     public void sort() {
         flexTableNew.addClickHandler(new ClickHandler() {
@@ -125,22 +127,22 @@ public class Demo implements EntryPoint {
                 cell = rowIndex + lengthForArray;
 
                 int number = Integer.parseInt(flexTableNew.getCellFormatter().getElement(rowIndex, columnIndex).getInnerHTML());
-                if (number <= 30) {
+                if (number <= 30 && number > 0) {
                     reGenerate(number);
-                }
-                else Window.alert("Please select a value smaller or equal to 30.");
+                } else Window.alert("Please select a value smaller or equal to 30.");
             }
         });
 
         SORT.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                if (!check) {
+                clickButtonSort = true;
+                if (!checkForSelectRecursive) {
                     recursiveDecreasing(currentArrOfNumber, 0, currentArrOfNumber.length - 1);
-                    check = true;
+                    checkForSelectRecursive = true;
                 } else {
                     recursiveIncreasing(currentArrOfNumber, 0, currentArrOfNumber.length - 1);
-                    check = false;
+                    checkForSelectRecursive = false;
                 }
                 putValueIntoTable();
             }
@@ -168,6 +170,7 @@ public class Demo implements EntryPoint {
         if (!smallValue) reArrOfNumber[(int) (Math.random() * (reArrOfNumber.length - 1))] = (int) (Math.random() * 30);
 
         currentArrOfNumber = Arrays.copyOf(reArrOfNumber, reArrOfNumber.length);
+        clickButtonSort = false;
         putValueIntoTable();
     }
 
@@ -227,11 +230,45 @@ public class Demo implements EntryPoint {
         }
     }
 
-    private void putValueIntoTable() {
-        int valueOfStrings = 10;
-        int row = 0;
-        int column = 0;
+    int valueOfStrings = 10;
+    int row = 0;
+    int column = 0;
+    int position;
 
+    private void putValueIntoTable() {
+        row = 0;
+        column = 0;
+
+        if (clickButtonSort) {
+            timer = new Timer() {
+                @Override
+                public void run() {
+                    if (position == currentArrOfNumber.length) {
+                        position = 0;
+                        cancel();
+                        return;
+                    }
+
+                    if (row >= valueOfStrings) {
+                        row = 0;
+                        column++;
+
+                        flexTableNew.setText(row, column, String.valueOf(currentArrOfNumber[position]));
+                    }
+
+                    flexTableNew.setText(row, column, String.valueOf(currentArrOfNumber[position]));
+                    row++;
+
+                    position++;
+                }
+            };
+            timer.scheduleRepeating(200);
+        } else {
+            commonPutValueIntoTable();
+        }
+    }
+
+    private void commonPutValueIntoTable() {
         for (int i = 0; i < currentArrOfNumber.length; i++) {
             if (row >= valueOfStrings) {
                 row = 0;

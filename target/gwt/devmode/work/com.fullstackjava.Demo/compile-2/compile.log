@@ -6,8 +6,8 @@ Compiling module com.fullstackjava.Demo
       Linking per-type JS with 0 new/changed types.
       Source Maps Enabled
    Compile of permutations succeeded
-   Compilation succeeded -- 1,153s
+   Compilation succeeded -- 1,212s
 Linking into C:\Users\Admin\MyApp\target\gwt\devmode\work\com.fullstackjava.Demo\compile-2\war\demo; Writing extras to C:\Users\Admin\MyApp\target\gwt\devmode\work\com.fullstackjava.Demo\compile-2\extras\demo
    Link succeeded
-   Linking succeeded -- 0,153s
-1,623s total -- Compile completed
+   Linking succeeded -- 0,215s
+1,773s total -- Compile completed
